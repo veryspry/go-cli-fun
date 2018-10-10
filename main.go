@@ -7,7 +7,7 @@ import (
   "errors"
   "strconv"
   // "github.com/c-bata/go-prompt"
-  p "github.com/manifoldco/promptui"
+  "github.com/manifoldco/promptui"
 )
 
 
@@ -19,16 +19,16 @@ func main() {
 
   if os.Args[1] == "opencalc" {
   }
-  prompter()
+
+  if os.Args[1] == "prompt" {
+    prompter()
+  }
 
 
-  // fmt.Println("Please select table.")
-	// t := prompt.Input("> ", completer)
-	// fmt.Println("You selected " + t)
 }
 
 func prompter() {
-  validate := func(i string) error {
+    validate := func(i string) error {
     _, err := strconv.ParseFloat(i, 64)
     if err != nil {
       return errors.New("Invalid Number")
@@ -36,27 +36,18 @@ func prompter() {
     return nil
   }
 
-  prompt := p.Prompt{
+  prompt := promptui.Prompt{
     Label: "Number",
     Validate: validate,
   }
 
-  result := prompt.Run()
+  result, err := prompt.Run()
 
   if err != nil {
     fmt.Printf("Promt failed %v\n", err)
-    err
+    return
   }
 
-  fmt.Printf("You chose: ", result)
+  fmt.Printf("You chose %q\n ", result)
+  fmt.Printf("You chose \n", result) // what the hell does %q do??
 }
-
-
-// func completer(d prompt.Document) []prompt.Suggest {
-// 	s := []prompt.Suggest {
-// 		{Text: "users", Description: "Store the username and age"},
-// 		{Text: "articles", Description: "Store the article text posted by user"},
-// 		{Text: "comments", Description: "Store the text commented to articles"},
-// 	}
-// 	return prompt.FilterHasPrefix(s, d.GetWordBeforeCursor(), true)
-// }
